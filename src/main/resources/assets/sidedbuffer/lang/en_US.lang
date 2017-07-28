@@ -1,0 +1,14 @@
+﻿#English Language File
+
+#Creative Tab
+itemGroup.SidedBuffer=Sided Buffer
+
+#Item names
+item.sb_dummy.name=null
+
+#Block names
+tile.AutoCraftingTable.name=Auto-crafting Table
+tile.SidedBuffer.name=Sided Buffer
+
+#Containers
+container.sidedbuffer=Sided Buffer

@@ -1,0 +1,16 @@
+[
+{
+  "modid": "SidedBuffer",
+  "name": "Sided Buffer",
+  "description": "Adds some block from some old mods.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["pome"],
+  "credits": "pome",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
