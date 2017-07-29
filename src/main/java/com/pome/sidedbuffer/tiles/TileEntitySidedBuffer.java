@@ -78,7 +78,6 @@ public class TileEntitySidedBuffer extends TileEntity implements ISidedInventory
 				inventory[slot] = ItemStack.loadItemStackFromNBT(subNBT);
 			}
 		}
-		updateRotation();
 	}
 
 	@Override

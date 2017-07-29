@@ -24,7 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.ForgeDirection;
 
-@Mod(modid="SidedBuffer", name="SidedBuffer", version="0.1")
+@Mod(modid="SidedBuffer", name="SidedBuffer", version="0.2")
 public class SidedBuffer
 {
 	public static SidedBuffer instance;

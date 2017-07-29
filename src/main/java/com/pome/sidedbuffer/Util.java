@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.pome.sidedbuffer.tiles.TileEntityAutoCrafting;
 
+import codechicken.microblock.Saw;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -164,9 +165,13 @@ public class Util
 					{
 						continue;
 					}
+					if(content.getItem() instanceof Saw && content.getMaxDamage() > 0)
+					{
+						return false;
+					}
 					if(content.getMaxStackSize() == 1)
 					{
-						break;
+						continue;
 					}
 					if(content.stackSize == 1)
 					{
