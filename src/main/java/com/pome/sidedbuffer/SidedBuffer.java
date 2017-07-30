@@ -5,9 +5,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.pome.sidedbuffer.blocks.BlockAutoCraftingTable;
 import com.pome.sidedbuffer.blocks.BlockSidedBuffer;
+import com.pome.sidedbuffer.creativetabs.CreativeTabSidedBuffer;
 import com.pome.sidedbuffer.guis.GuiHandler;
 import com.pome.sidedbuffer.tiles.TileEntityAutoCrafting;
 import com.pome.sidedbuffer.tiles.TileEntitySidedBuffer;
+import com.pome.sidedbuffer.util.ItemDummy;
+import com.pome.sidedbuffer.util.Util;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -24,7 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.ForgeDirection;
 
-@Mod(modid="SidedBuffer", name="SidedBuffer", version="0.2")
+@Mod(modid="SidedBuffer", name="SidedBuffer", version="0.3")
 public class SidedBuffer
 {
 	public static SidedBuffer instance;

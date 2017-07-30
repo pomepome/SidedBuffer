@@ -1,4 +1,6 @@
-package com.pome.sidedbuffer;
+package com.pome.sidedbuffer.creativetabs;
+
+import com.pome.sidedbuffer.SidedBuffer;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

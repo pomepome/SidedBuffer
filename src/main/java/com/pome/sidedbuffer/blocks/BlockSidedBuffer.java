@@ -4,8 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pome.sidedbuffer.SidedBuffer;
-import com.pome.sidedbuffer.Util;
 import com.pome.sidedbuffer.tiles.TileEntitySidedBuffer;
+import com.pome.sidedbuffer.util.Util;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;

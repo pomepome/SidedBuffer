@@ -1,4 +1,4 @@
-package com.pome.sidedbuffer;
+package com.pome.sidedbuffer.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pome.sidedbuffer.SidedBuffer;
 import com.pome.sidedbuffer.tiles.TileEntityAutoCrafting;
 
 import codechicken.microblock.Saw;
@@ -120,6 +121,48 @@ public class Util
 		if(!act)
 		{
 			int count = 0;
+
+			if(tile instanceof IInventory)
+			{
+				boolean req = true;
+				for(int i = 0;i < 9;i++)
+				{
+					ItemStack content = ((IInventory)tile).getStackInSlot(i);
+					if(content == null)
+					{
+						continue;
+					}
+					if(content.getItem() instanceof Saw && content.getMaxDamage() > 0)
+					{
+						return false;
+					}
+					if(content.getMaxStackSize() == 1)
+					{
+						continue;
+					}
+					if(content.stackSize == 1)
+					{
+						req = false;
+						break;
+					}
+				}
+				if(includeItself && req)
+				{
+					IInventory inv = (IInventory)tile;
+					for(int i = 0;i < 9;i++)
+					{
+						ItemStack stack2 = inv.getStackInSlot(i);
+						if(compareStacks(stack, stack2) && stack2.stackSize > 1)
+						{
+							count += inv.getStackInSlot(i).stackSize - 1;
+						}
+					}
+				}
+			}
+			if(count >= stack.stackSize)
+			{
+				return true;
+			}
 			for(int i = 0;i < checkedInventories.size();i++)
 			{
 				IInventory inv = checkedInventories.get(i);
@@ -155,43 +198,6 @@ public class Util
 					}
 				}
 			}
-			if(tile instanceof IInventory)
-			{
-				boolean req = true;
-				for(int i = 0;i < 9;i++)
-				{
-					ItemStack content = ((IInventory)tile).getStackInSlot(i);
-					if(content == null)
-					{
-						continue;
-					}
-					if(content.getItem() instanceof Saw && content.getMaxDamage() > 0)
-					{
-						return false;
-					}
-					if(content.getMaxStackSize() == 1)
-					{
-						continue;
-					}
-					if(content.stackSize == 1)
-					{
-						req = false;
-						break;
-					}
-				}
-				if(includeItself && req && count < stack.stackSize)
-				{
-					IInventory inv = (IInventory)tile;
-					for(int i = 0;i < 9;i++)
-					{
-						ItemStack stack2 = inv.getStackInSlot(i);
-						if(compareStacks(stack, stack2) && stack2.stackSize > 1)
-						{
-							count += inv.getStackInSlot(i).stackSize - 1;
-						}
-					}
-				}
-			}
 			return count >= stack.stackSize;
 		}
 		else
@@ -202,6 +208,33 @@ public class Util
 				return false;
 			}
 
+			if(includeItself && tile instanceof IInventory)
+			{
+				IInventory inv = (IInventory)tile;
+				for(int i = 0;i < 9;i++)
+				{
+					if(compareStacks(stack, inv.getStackInSlot(i)) && inv.getStackInSlot(i).stackSize > 1)
+					{
+						ItemStack content = inv.getStackInSlot(i).copy();
+						content.stackSize--;
+						remain.stackSize--;
+						if(remain.stackSize == 0)
+						{
+							remain = null;
+						}
+						inv.setInventorySlotContents(i, content);
+						inv.markDirty();
+						if(remain == null)
+						{
+							break;
+						}
+					}
+				}
+			}
+			if(remain == null)
+			{
+				return true;
+			}
 			for(int i = 0;i < checkedInventories.size();i++)
 			{
 				IInventory inv = checkedInventories.get(i);
@@ -259,29 +292,6 @@ public class Util
 				if(remain == null)
 				{
 					break;
-				}
-			}
-			if(includeItself && tile instanceof IInventory && remain != null)
-			{
-				IInventory inv = (IInventory)tile;
-				for(int i = 0;i < 9;i++)
-				{
-					if(compareStacks(stack, inv.getStackInSlot(i)) && inv.getStackInSlot(i).stackSize > 1)
-					{
-						ItemStack content = inv.getStackInSlot(i).copy();
-						content.stackSize--;
-						remain.stackSize--;
-						if(remain.stackSize == 0)
-						{
-							remain = null;
-						}
-						inv.setInventorySlotContents(i, content);
-						inv.markDirty();
-						if(remain == null)
-						{
-							break;
-						}
-					}
 				}
 			}
 			return true;

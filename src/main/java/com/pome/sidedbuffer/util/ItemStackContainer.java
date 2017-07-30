@@ -1,4 +1,4 @@
-package com.pome.sidedbuffer;
+package com.pome.sidedbuffer.util;
 
 import java.util.ArrayList;
 import java.util.List;

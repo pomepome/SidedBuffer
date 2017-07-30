@@ -1,8 +1,8 @@
 package com.pome.sidedbuffer.guis;
 
-import com.pome.sidedbuffer.Util;
 import com.pome.sidedbuffer.guis.container.ContainerSidedBuffer;
 import com.pome.sidedbuffer.tiles.TileEntitySidedBuffer;
+import com.pome.sidedbuffer.util.Util;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;

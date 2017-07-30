@@ -1,4 +1,4 @@
-package com.pome.sidedbuffer;
+package com.pome.sidedbuffer.util;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;

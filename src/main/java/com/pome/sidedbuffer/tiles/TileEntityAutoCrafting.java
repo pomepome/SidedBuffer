@@ -8,10 +8,10 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pome.sidedbuffer.ItemDummy;
-import com.pome.sidedbuffer.ItemStackContainer;
 import com.pome.sidedbuffer.SidedBuffer;
-import com.pome.sidedbuffer.Util;
+import com.pome.sidedbuffer.util.ItemDummy;
+import com.pome.sidedbuffer.util.ItemStackContainer;
+import com.pome.sidedbuffer.util.Util;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -54,7 +54,7 @@ public class TileEntityAutoCrafting extends TileEntity implements ISidedInventor
 				{
 					return null;
 				}
-				return decrStackSize(slot, inventory[9].stackSize);
+				return decrStackSize(slot, amount);
 			}
 		}
 		ItemStack stack = inventory[slot];
