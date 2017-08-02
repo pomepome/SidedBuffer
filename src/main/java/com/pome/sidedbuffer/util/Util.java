@@ -11,11 +11,13 @@ import com.pome.sidedbuffer.SidedBuffer;
 import com.pome.sidedbuffer.tiles.TileEntityAutoCrafting;
 
 import codechicken.microblock.Saw;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityHopper;
@@ -393,35 +395,48 @@ public class Util
 			limit = inv.getSizeInventory();
 		}
 
+
 		for (int i : getAccecibleSlots(inv, side))
 		{
 			if(i > limit)
 			{
-				continue;
+				break;
 			}
 			ItemStack invStack = inv.getStackInSlot(i);
 
 			if (invStack == null && inv.isItemValidForSlot(i, stack))
 			{
-				inv.setInventorySlotContents(i, stack);
-				return null;
+				int toPut = Math.min(inv.getInventoryStackLimit(), stack.getMaxStackSize());
+				toPut = Math.min(toPut, stack.stackSize);
+				inv.setInventorySlotContents(i, changeAmount(stack,toPut));
+				stack.stackSize -= toPut;
+				if(stack.stackSize == 0)
+				{
+					return null;
+				}
 			}
 
-			if (compareStacks(stack, invStack) && invStack.stackSize < invStack.getMaxStackSize())
+			if (compareStacks(stack, invStack))
 			{
 				int max = Math.min(inv.getInventoryStackLimit(), invStack.getMaxStackSize());
-				int remaining = max - invStack.stackSize;
 
-				if (remaining >= stack.stackSize)
+				if (stack.stackSize + invStack.stackSize <= max)
 				{
 					invStack.stackSize += stack.stackSize;
 					inv.setInventorySlotContents(i, invStack);
 					return null;
 				}
+				else
+				{
+					stack.stackSize -= max - invStack.stackSize;
+					invStack.stackSize = max;
+					inv.setInventorySlotContents(i, invStack);
+				}
+			}
 
-				invStack.stackSize += remaining;
-				inv.setInventorySlotContents(i, invStack);
-				stack.stackSize -= remaining;
+			if(stack.stackSize == 0)
+			{
+				return null;
 			}
 		}
 
@@ -460,5 +475,46 @@ public class Util
 			return "X";
 		}
 		return dir.name().substring(0, 1);
+	}
+	public static void spawnEntityItem(World world, ItemStack stack, double x, double y, double z,float jump)
+	{
+    	float f = world.rand.nextFloat() * 0.8F + 0.1F;
+		float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
+		EntityItem entityitem;
+
+		for (float f2 = world.rand.nextFloat() * 0.8F + 0.1F; stack.stackSize > 0; world.spawnEntityInWorld(entityitem))
+		{
+			int j1 = world.rand.nextInt(21) + 10;
+
+			if (j1 > stack.stackSize)
+				j1 = stack.stackSize;
+
+			stack.stackSize -= j1;
+			entityitem = new EntityItem(world, (double)((float) x + f), (double)((float) y + f1), (double)((float) z + f2), new ItemStack(stack.getItem(), j1, stack.getItemDamage()));
+			float f3 = 0.05F;
+			entityitem.motionX = (double)((float) world.rand.nextGaussian() * f3);
+			entityitem.motionY = jump;
+			entityitem.motionZ = (double)((float) world.rand.nextGaussian() * f3);
+
+			if (stack.hasTagCompound())
+			{
+				entityitem.getEntityItem().setTagCompound((NBTTagCompound)stack.getTagCompound().copy());
+			}
+		}
+	}
+	public static void showItemInfo(ItemStack stack)
+	{
+		if(logger == null || !SidedBuffer.debug)
+		{
+			return;
+		}
+		if(stack != null)
+		{
+			logger.info("Outputting ItemStack Info:" + stack.getDisplayName()+" * "+stack.stackSize);
+		}
+		else
+		{
+			logger.info("Outputting ItemStack Info:null");
+		}
 	}
 }

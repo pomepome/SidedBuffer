@@ -10,12 +10,14 @@ import com.pome.sidedbuffer.util.Util;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -41,6 +43,21 @@ public class BlockSidedBuffer extends BlockContainer
 	{
 		return new TileEntitySidedBuffer();
 	}
+
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta)
+    {
+		IInventory tile = (IInventory)world.getTileEntity(x,y,z);
+		for(int i = 0;i < tile.getSizeInventory();i++)
+		{
+			ItemStack stack = tile.getStackInSlotOnClosing(i);
+			if(stack != null && stack.getItem() != SidedBuffer.dummy)
+			{
+				Util.spawnEntityItem(world, stack, x, y, z, 0.05f);
+			}
+		}
+		super.breakBlock(world, x, y, z, block, meta);
+    }
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)

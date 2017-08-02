@@ -1,16 +1,17 @@
 package com.pome.sidedbuffer.guis;
 
+import com.pome.sidedbuffer.tiles.TileEntityAutoCrafting;
+
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 
 public class InventoryAutoCrafting extends InventoryCrafting
 {
 	Container container;
-	IInventory workbench;
+	TileEntityAutoCrafting workbench;
 
-	public InventoryAutoCrafting(Container p_i1807_1_,IInventory tile)
+	public InventoryAutoCrafting(Container p_i1807_1_,TileEntityAutoCrafting tile)
 	{
 		super(p_i1807_1_, 3,3);
 		workbench = tile;

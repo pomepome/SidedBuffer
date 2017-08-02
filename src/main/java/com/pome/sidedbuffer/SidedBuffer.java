@@ -10,7 +10,6 @@ import com.pome.sidedbuffer.guis.GuiHandler;
 import com.pome.sidedbuffer.tiles.TileEntityAutoCrafting;
 import com.pome.sidedbuffer.tiles.TileEntitySidedBuffer;
 import com.pome.sidedbuffer.util.ItemDummy;
-import com.pome.sidedbuffer.util.Util;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -25,7 +24,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.ForgeDirection;
 
 @Mod(modid="SidedBuffer", name="SidedBuffer", version="0.3")
 public class SidedBuffer
@@ -52,7 +50,6 @@ public class SidedBuffer
 	{
 		Configuration config = new Configuration(e.getSuggestedConfigurationFile());
 		debug = config.getBoolean("debug", Configuration.CATEGORY_GENERAL, false, "Debugging mode: it shouldn't be used by everyone.");
-		ignoreSidedInventory = config.getBoolean("ignoreSidedInventory", Configuration.CATEGORY_GENERAL, false, "if true, Auto-crafting table can't use or extract to the sided Inventory's item.");
 		config.save();
 	}
 
@@ -68,6 +65,5 @@ public class SidedBuffer
 		GameRegistry.registerTileEntity(TileEntityAutoCrafting.class, "pome_AutoCrafting");
 		GameRegistry.addShapelessRecipe(new ItemStack(buffer,2), new ItemStack(Blocks.chest), new ItemStack(Blocks.chest));
 		GameRegistry.addShapelessRecipe(new ItemStack(autoCrafting), new ItemStack(Blocks.crafting_table),new ItemStack(Items.redstone));
-		logger.info("Dir:"+Util.getInitialOfDirection(ForgeDirection.DOWN));
 	}
 }

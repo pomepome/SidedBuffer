@@ -25,7 +25,8 @@ public class TileEntityAutoCrafting extends TileEntity implements ISidedInventor
 {
 	private static final Logger logger = LogManager.getLogger("SidedBuffer:TileEntityAutoCrafting");
 
-	private ItemStack[] inventory = new ItemStack[10];
+	private ItemStack[] inventory = new ItemStack[11];
+
     public ItemStack currentResult;
 
 	@Override
@@ -91,10 +92,9 @@ public class TileEntityAutoCrafting extends TileEntity implements ISidedInventor
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack)
 	{
-			inventory[slot] = stack;
-			this.markDirty();
+		inventory[slot] = stack;
+		markDirty();
 	}
-
 	@Override
 	public String getInventoryName()
 	{
@@ -140,17 +140,13 @@ public class TileEntityAutoCrafting extends TileEntity implements ISidedInventor
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side)
 	{
-		return new int[]{0,1,2,3,4,5,6,7,8,9};
+		return new int[]{9,10,11,12,13,14,15,16,17,18};
 	}
 
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int side)
 	{
-		if(slot < 0 || slot > 8 || inventory[slot] == null)
-		{
-			return false;
-		}
-		return slot == getLowestStackSizeSlot(stack);
+		return slot > 9 && getLowestStackSizeSlot(stack) > -1 && stack.getMaxStackSize() > 1;
 	}
 
 	@Override
@@ -163,17 +159,17 @@ public class TileEntityAutoCrafting extends TileEntity implements ISidedInventor
 	{
 		super.readFromNBT(nbt);
 		NBTTagList list = nbt.getTagList("Items", 10);
-		inventory = new ItemStack[10];
 		for (int i = 0; i < list.tagCount(); i++)
 		{
 			NBTTagCompound subNBT = list.getCompoundTagAt(i);
 			byte slot = subNBT.getByte("Slot");
 
-			if (slot >= 0 && slot < 10)
+			if (slot >= 0 && slot < 11)
 			{
 				inventory[slot] = ItemStack.loadItemStackFromNBT(subNBT);
 			}
 		}
+
 		if(nbt.hasKey("CurrentResult"))
 		{
 			NBTTagCompound tag = nbt.getCompoundTag("CurrentResult");
@@ -192,7 +188,7 @@ public class TileEntityAutoCrafting extends TileEntity implements ISidedInventor
 		super.writeToNBT(nbt);
 
 		NBTTagList list = new NBTTagList();
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < getSizeInventory(); i++)
 		{
 			if (inventory[i] == null)
 			{
@@ -204,7 +200,6 @@ public class TileEntityAutoCrafting extends TileEntity implements ISidedInventor
 			inventory[i].writeToNBT(subNBT);
 			list.appendTag(subNBT);
 		}
-
 		nbt.setTag("Items", list);
 
 		if(currentResult != null)
@@ -222,6 +217,35 @@ public class TileEntityAutoCrafting extends TileEntity implements ISidedInventor
 		if(inventory[9] == null)
 		{
 			inventory[9] = new ItemStack(SidedBuffer.dummy,1);
+		}
+		{
+			ItemStack stack = inventory[10];
+			if(stack != null && getLowestStackSizeSlot(stack) > -1)
+			{
+				int count = stack.stackSize;
+				for(int ingrSlot = 0;ingrSlot < count;ingrSlot++)
+				{
+					int suggestedSlot = getLowestStackSizeSlot(stack);
+					if(suggestedSlot > -1)
+					{
+						inventory[suggestedSlot].stackSize++;
+						inventory[10].stackSize--;
+					}
+					if(inventory[10].stackSize == 0)
+					{
+						inventory[10] = null;
+						markDirty();
+						return;
+					}
+				}
+				if(SidedBuffer.debug)
+				{
+					logger.info("Spawning item");
+				}
+				Util.spawnEntityItem(worldObj, inventory[10].copy(), xCoord + 0.5, yCoord + 1, zCoord + 0.5, 0.2f);
+				inventory[10] = null;
+				markDirty();
+			}
 		}
 	}
 
